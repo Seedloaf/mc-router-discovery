@@ -672,15 +672,15 @@ func TestReconcilerApply(t *testing.T) {
 			actions: []Action{
 				{
 					ServerAddress: "",
-					Backend: "some-backend"
+					Backend:       "some-backend",
 				},
 				{
 					ServerAddress: "some-address",
-					Backend: ""
+					Backend:       "",
 				},
 			},
 			expectError: false,
-		}
+		},
 	}
 
 	for _, tt := range tests {
