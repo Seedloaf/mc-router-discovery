@@ -151,6 +151,11 @@ func (r *Reconciler) Actions(diffs []ReconcilerDiff) []Action {
 
 func (r *Reconciler) Apply(actions []Action) error {
 	for _, action := range actions {
+		if action.ServerAddress == "" || action.Backend == "" {
+			slog.Debug("skipping invalid action")
+			continue
+		}
+
 		switch action.Type {
 		case ActionAdd:
 			route := Route{
