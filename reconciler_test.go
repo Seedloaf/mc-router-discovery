@@ -667,6 +667,20 @@ func TestReconcilerApply(t *testing.T) {
 			expectError: true,
 			errorMsg:    "failed to register route",
 		},
+		{
+			name: "invalid actions",
+			actions: []Action{
+				{
+					ServerAddress: "",
+					Backend: "some-backend"
+				},
+				{
+					ServerAddress: "some-address",
+					Backend: ""
+				},
+			},
+			expectError: false,
+		}
 	}
 
 	for _, tt := range tests {
