@@ -151,21 +151,23 @@ func (r *Reconciler) Actions(diffs []ReconcilerDiff) []Action {
 
 func (r *Reconciler) Apply(actions []Action) error {
 	for _, action := range actions {
-		if action.ServerAddress == "" || action.Backend == "" {
-			slog.Debug("skipping invalid action")
-			continue
+		route := Route{
+			ServerAddress: action.ServerAddress,
+			Backend:       action.Backend,
 		}
-
 		switch action.Type {
 		case ActionAdd:
-			route := Route{
-				ServerAddress: action.ServerAddress,
-				Backend:       action.Backend,
+			if !route.ValidAdd() {
+				continue
 			}
+
 			if err := r.McRouterClient.RegisterRoute(route); err != nil {
 				return fmt.Errorf("failed to register route %s: %w", action.ServerAddress, err)
 			}
 		case ActionDelete:
+			if !route.ValidDelete() {
+				continue
+			}
 			if err := r.McRouterClient.DeleteRoute(action.ServerAddress); err != nil {
 				return fmt.Errorf("failed to delete route %s: %w", action.ServerAddress, err)
 			}

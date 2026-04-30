@@ -26,3 +26,11 @@ func (r Route) Json() (*bytes.Reader, error) {
 
 	return bytes.NewReader(body), nil
 }
+
+func (r Route) ValidAdd() bool {
+	return r.ServerAddress != "" && r.Backend != ""
+}
+
+func (r Route) ValidDelete() bool {
+	return r.ServerAddress != ""
+}
